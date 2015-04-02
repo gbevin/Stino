@@ -3,7 +3,7 @@
 # --------------------- 
 
 name=Teensy ARM (32-bits) Boards
-compiler.path={runtime.ide.path}/hardware/tools/arm-none-eabi/bin/
+compiler.path={runtime.ide.path}/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-c -g -Os -Wall -ffunction-sections -fdata-sections -MMD
 compiler.c.elf.cmd=arm-none-eabi-gcc
