@@ -639,7 +639,7 @@ def getEepCommand(args):
 	return eep_command
 
 def getHexCommand(args):
-	command_text = args['recipe.objcopy.hex.pattern']
+	command_text = args['recipe.objcopy.bin.pattern']
 	hex_command = Command(command_text)
 
 	build_folder = args['build.path']
@@ -685,6 +685,7 @@ def genCommandList(args, cur_project, arduino_info):
 	core_command_list = getCompileCommandList(core_C_file_list, args, includes_para)
 	ar_command = getArCommand(args, core_command_list)
 	elf_command = getElfCommand(args, project_command_list)
+	hex_command = getHexCommand(args)
 	size_command = getSizeCommand(args)
 
 	full_compilation = constant.sketch_settings.get('full_compilation', True)
@@ -703,9 +704,8 @@ def genCommandList(args, cur_project, arduino_info):
 	command_list.append(elf_command)
 	if 'recipe.objcopy.eep.pattern' in args:
 		eep_command = getEepCommand(args)
-		hex_command = getHexCommand(args)
 		command_list.append(eep_command)
-		command_list.append(hex_command)
+	command_list.append(hex_command)
 	command_list.append(size_command)
 	return command_list
 
