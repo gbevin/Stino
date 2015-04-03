@@ -311,7 +311,10 @@ def addBuildUsbValue(args, platform_file):
 def getDefaultArgs(cur_project, arduino_info):
 	core_folder = getCoreFolder(arduino_info)
 
+	home_folder = os.getenv('HOME')
 	arduino_folder = base.getArduinoFolder()
+	arduino_packages = '%s/Library/Arduino15/packages' % home_folder
+	arduino_tools = '%s/arduino/tools' % arduino_packages
 	ide_path = os.path.join(arduino_folder, 'hardware')
 	project_name = cur_project.getName()
 	serial_port = getSelectedSerialPort()
@@ -322,6 +325,8 @@ def getDefaultArgs(cur_project, arduino_info):
 
 	args = {}
 	args['runtime.ide.path'] = arduino_folder
+	args['runtime.tools.bossac.path'] = '%s/bossac/1.3a-arduino' % arduino_tools
+	args['runtime.tools.arm-none-eabi-gcc.path'] = '%s/arm-none-eabi-gcc/4.8.3-2014q1' % arduino_tools
 	args['ide.path'] = ide_path
 	args['build.project_name'] = project_name
 	args['serial.port.file'] = serial_port
@@ -333,6 +338,7 @@ def getDefaultArgs(cur_project, arduino_info):
 	args['object_files'] = '{object_files}'
 	args['includes'] = '{includes}'
 	args['build.path'] = build_folder
+	args['home.path'] = home_folder
 	return args
 
 def getBuildFolder(cur_project):
@@ -679,8 +685,6 @@ def genCommandList(args, cur_project, arduino_info):
 	core_command_list = getCompileCommandList(core_C_file_list, args, includes_para)
 	ar_command = getArCommand(args, core_command_list)
 	elf_command = getElfCommand(args, project_command_list)
-	eep_command = getEepCommand(args)
-	hex_command = getHexCommand(args)
 	size_command = getSizeCommand(args)
 
 	full_compilation = constant.sketch_settings.get('full_compilation', True)
@@ -697,9 +701,11 @@ def genCommandList(args, cur_project, arduino_info):
 		command_list += core_command_list
 		command_list.append(ar_command)
 	command_list.append(elf_command)
-	if args['recipe.objcopy.eep.pattern']:
+	if 'recipe.objcopy.eep.pattern' in args:
+		eep_command = getEepCommand(args)
+		hex_command = getHexCommand(args)
 		command_list.append(eep_command)
-	command_list.append(hex_command)
+		command_list.append(hex_command)
 	command_list.append(size_command)
 	return command_list
 
