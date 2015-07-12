@@ -835,10 +835,10 @@ def getKeywordListFromFile(keywords_file):
 			word_list = re.findall(r'\S+', line)
 			if len(word_list) > 1:
 				keyword_name = word_list[0]
-				if len(word_list) == 3:
+				if len(word_list) == 4:
 					keyword_type = word_list[1]
 					keyword_ref = word_list[2]
-				elif len(word_list) == 2:
+				elif len(word_list) >= 2:
 					if 'LITERAL' in word_list[1] or 'KEYWORD' in word_list[1]:
 						keyword_type = word_list[1]
 						keyword_ref = ''
